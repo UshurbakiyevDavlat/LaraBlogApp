@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@vitejs/plugin-vue": "^4.3.4",
+        "laravel-vue-pagination": "^4.1.1",
         "vue": "^3.2.36",
         "vue-loader": "^17.2.2"
     }
