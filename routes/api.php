@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('posts')->group(static function () {
     Route::get('/', [PostController::class, 'index'])->name('posts.index');
+});
+
+Route::prefix('categories')->group(static function () {
+    Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
 });

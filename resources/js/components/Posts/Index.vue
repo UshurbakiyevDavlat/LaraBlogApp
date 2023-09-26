@@ -1,6 +1,14 @@
 <template>
     <div class="overflow-hidden overflow-x-auto p-6 bg-white border-gray-200">
         <div class="min-w-full align-middle">
+            <div class="mb-4">
+                <select v-model="selectedCategory" class="block mt-1 w-full sm:w-1/4 rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <option value="" selected>-- Filter by category --</option>
+                    <option v-for="category in categories" :value="category.id">
+                        {{ category.title }}
+                    </option>
+                </select>
+            </div>
             <table class="min-w-full divide-y divide-gray-200 border">
                 <thead>
                 <tr>
@@ -40,16 +48,22 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import useCategories from '../../composables/categories.js';
 import usePosts from "../../composables/posts";
 
 export default {
     name: "Index",
     setup() {
+        const selectedCategory = ref('');
         const { posts, getPosts } = usePosts();
-        onMounted(getPosts);
+        const { categories, getCategories } = useCategories();
+        onMounted(() => {
+            getPosts()
+            getCategories()
+        });
 
-        return { posts, getPosts };
+        return { posts, getPosts, categories, getCategories,selectedCategory };
     },
 }
 </script>
