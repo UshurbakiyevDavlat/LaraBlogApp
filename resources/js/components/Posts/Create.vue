@@ -1,0 +1,3 @@
+<template>
+    Create component
+</template>
