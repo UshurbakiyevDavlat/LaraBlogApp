@@ -20,9 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('posts')->group(static function () {
-    Route::get('/', [PostController::class, 'index'])->name('posts.index');
-});
+Route::apiResource('/posts', PostController::class);
 
 Route::prefix('categories')->group(static function () {
     Route::get('/', [CategoryController::class, 'index'])->name('categories.index');
