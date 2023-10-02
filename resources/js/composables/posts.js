@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 export default function usePosts() {
     const posts = ref({})
     const router = useRouter()
+    const validationErrors = ref({})
 
     const getPosts = async (
         $page = 1,
@@ -32,8 +33,9 @@ export default function usePosts() {
             })
             .catch(error => {
                 console.log(error)
+                validationErrors.value = error.response.data.errors
             })
     }
 
-    return { posts, getPosts, storePost };
+    return { posts, getPosts, storePost, validationErrors };
 }
