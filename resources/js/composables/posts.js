@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router';
 
 export default function usePosts() {
     const posts = ref({})
+    const post = ref({})
     const router = useRouter()
     const validationErrors = ref({})
     const isLoading = ref(false)
@@ -27,11 +28,23 @@ export default function usePosts() {
             })
     }
 
+    const getPost = async (id) => {
+        axios.get('/api/posts/' + id)
+            .then(response => {
+                post.value = response.data.data
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
     const storePost = async (post) => {
-        if (isLoading.value) return;
+        if (isLoading.value) {
+            return;
+        }
 
         let serializedPost = new FormData()
-        for(let item in post) {
+        for (let item in post) {
             if (post.hasOwnProperty(item)) {
                 serializedPost.append(item, post[item])
             }
@@ -50,5 +63,5 @@ export default function usePosts() {
             }).finally(() => (isLoading.value = false))
     }
 
-    return { posts, getPosts, storePost, validationErrors, isLoading };
+    return { posts, getPosts, getPost, post, storePost, validationErrors, isLoading };
 }

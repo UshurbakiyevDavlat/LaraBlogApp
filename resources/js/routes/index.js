@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import PostCreate from '../components/Posts/Create.vue';
 import PostsIndex from '../components/Posts/Index.vue';
+import PostEdit from '../components/Posts/Edit.vue';
 
 const routes = [
     {
@@ -14,6 +15,12 @@ const routes = [
         name: 'post.create',
         component: PostCreate,
         meta: { title: 'PostCreate' },
+    },
+    {
+        path: '/posts/edit/:id',
+        name: 'post.edit',
+        component: PostEdit,
+        meta: { title: 'PostEdit' },
     },
 ];
 
