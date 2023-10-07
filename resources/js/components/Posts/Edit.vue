@@ -89,7 +89,7 @@ import usePosts from '../../composables/posts.js';
 export default {
     setup() {
         const { categories, getCategories } = useCategories();
-        const { getPost, post, validationErrors, isLoading } = usePosts();
+        const { getPost, post, updatePost, validationErrors, isLoading } = usePosts();
         const route = useRoute();
 
         onMounted(() => {
@@ -102,6 +102,7 @@ export default {
             post,
             validationErrors,
             isLoading,
+            updatePost,
         };
     },
 }

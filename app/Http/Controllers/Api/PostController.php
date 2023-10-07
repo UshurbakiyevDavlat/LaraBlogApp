@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\IndexRequest;
+use App\Http\Requests\Post\StoreRequest;
+use App\Http\Requests\Post\UpdateRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -32,12 +33,21 @@ class PostController extends Controller
     {
         $data = $request->validated();
 
-        if($data['thumbnail']) {
+        if ($data['thumbnail']) {
             $filename = $request->file('thumbnail')?->getClientOriginalName();
             info($filename);
         }
 
         $post = Post::create($data);
+
+        return new PostResource($post);
+    }
+
+    public function update(Post $post, UpdateRequest $request): PostResource
+    {
+        $data = $request->validated();
+
+        $post->update($data);
 
         return new PostResource($post);
     }
