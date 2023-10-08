@@ -3,7 +3,9 @@
 namespace App\Http\Requests\Post;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 class IndexRequest extends FormRequest
 {
@@ -23,9 +25,25 @@ class IndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => ['nullable', 'exists:categories,id'],
+            'search_category' => ['nullable', 'exists:categories,id'],
+            'search_id' => ['nullable'],
+            'search_title' => ['nullable'],
+            'search_content' => ['nullable'],
+            'search_global' => [
+                'nullable',
+            ],
             'order' => ['nullable', 'in:asc,desc'],
             'column' => ['nullable', 'in:id,title,created_at'],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $response = response()->json([
+            'message' => 'The given data was invalid.',
+            'errors' => $validator->errors(),
+        ], 422);
+
+        throw new ValidationException($validator, $response);
     }
 }

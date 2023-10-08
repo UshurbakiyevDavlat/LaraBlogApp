@@ -21,8 +21,25 @@ class PostController extends Controller
         $orderDir = $data['order'] ?? 'desc';
 
         $post = Post::with('category')
-            ->when($data['category'], function ($query) use ($data) {
-                $query->where('category_id', $data['category']);
+            ->when($data['search_category'], function ($query) use ($data) {
+                $query->where('category_id', $data['search_category']);
+            })
+            ->when($data['search_id'], function ($query) use ($data) {
+                $query->where('id', $data['search_id']);
+            })
+            ->when($data['search_title'], function ($query) use ($data) {
+                $query->where('title', 'like', '%' . $data['search_title'] . '%');
+            })
+            ->when($data['search_content'], function ($query) use ($data) {
+                $query->where('content', 'like', '%' . $data['search_content'] . '%');
+            })
+            ->when($data['search_global'], function ($query) use ($data) {
+                $query->where(function ($q) use ($data) {
+                    $q->where('title', 'like', '%' . $data['search_global'] . '%')
+                        ->orWhere('content', 'like', '%' . $data['search_global'] . '%')
+                        ->orWhere('id', $data['search_global'])
+                        ->orWhere('category_id', $data['search_global']);
+                });
             })
             ->orderBy($orderColumn, $orderDir)
             ->paginate(10);
