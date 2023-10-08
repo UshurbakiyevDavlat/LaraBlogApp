@@ -1,4 +1,4 @@
-import { ref, inject } from 'vue';
+import { inject, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default function usePosts() {
@@ -73,19 +73,69 @@ export default function usePosts() {
             return;
         }
 
-        axios.put('/api/posts/' + post.id , post)
+        validationErrors.value = {}
+        isLoading.value = true
+
+        axios.put('/api/posts/' + post.id, post)
             .then(response => {
                 router.push({ name: 'post.index' })
                 swal({
                     icon: 'success',
-                    title: 'Post updated successfully!'
+                    title: 'Post updated successfully!',
                 })
             })
             .catch(error => {
                 console.log(error)
                 validationErrors.value = error.response.data.errors
-            }).finally(() => (isLoading.value = false))
+            })
+            .finally(() => (
+                isLoading.value = false
+            ))
     }
 
-    return { posts, getPosts, getPost, post, storePost, updatePost, validationErrors, isLoading };
+    const deletePost = async (id) => {
+        swal({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this action!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            confirmButtonColor: '#ef4444',
+            timer: 20000,
+            timerProgressBar: true,
+            reverseButtons: true,
+        })
+            .then(result => {
+                if (result.isConfirmed) {
+                    axios.delete('/api/posts/' + id)
+                        .then(response => {
+                            getPosts()
+                            router.push({ name: 'post.index' })
+                            swal({
+                                icon: 'success',
+                                title: 'Post deleted successfully',
+                            })
+                        })
+                        .catch(error => {
+                            console.log(error)
+                            swal({
+                                icon: 'error',
+                                title: 'Something went wrong',
+                            })
+                        })
+                }
+            })
+    }
+
+    return {
+        posts,
+        getPosts,
+        getPost,
+        post,
+        storePost,
+        updatePost,
+        validationErrors,
+        isLoading,
+        deletePost,
+    };
 }

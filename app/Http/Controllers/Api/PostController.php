@@ -9,6 +9,7 @@ use App\Http\Requests\Post\UpdateRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 
 class PostController extends Controller
 {
@@ -55,5 +56,12 @@ class PostController extends Controller
     public function show(Post $post): PostResource
     {
         return new PostResource($post);
+    }
+
+    public function destroy(Post $post): Response
+    {
+        $post->delete();
+
+        return response()->noContent();
     }
 }
