@@ -3,10 +3,9 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import { createApp } from 'vue/dist/vue.esm-bundler';
 
 import './bootstrap';
-import App from './layouts/App.vue';
 import router from './routes';
 
-const app = createApp(App)
+const app = createApp({})
 app.use(router)
 app.use(VueSweetalert2);
 

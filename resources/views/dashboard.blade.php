@@ -16,4 +16,5 @@
 </head>
 <body class="font-sans antialiased" id="app">
 </body>
+<router-view></router-view>
 </html>
