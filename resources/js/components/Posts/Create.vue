@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import { useAbility } from '@casl/vue';
 import { onMounted, reactive } from 'vue';
 import useCategories from '../../composables/categories.js';
 import usePosts from '../../composables/posts.js';
@@ -99,6 +100,7 @@ export default {
         onMounted(() => {
             getCategories()
         });
+        const { can } = useAbility()
 
         return {
             categories,
@@ -106,6 +108,7 @@ export default {
             storePost,
             validationErrors,
             isLoading,
+            can,
         };
     },
 }

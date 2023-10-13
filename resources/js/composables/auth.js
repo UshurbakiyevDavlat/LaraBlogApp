@@ -1,3 +1,5 @@
+import { Ability, AbilityBuilder } from '@casl/ability';
+import { ABILITY_TOKEN } from '@casl/vue';
 import { inject, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -17,6 +19,7 @@ export default function useAuth() {
     const validationErrors = ref({})
     const processing = ref(false)
     const swal = inject('$swal')
+    const ability = inject(ABILITY_TOKEN)
 
     const submitForm = async () => {
         if (processing.value) return
@@ -28,9 +31,9 @@ export default function useAuth() {
             .then(async response => {
                 loginUser(response)
             }).catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
+            if (error.response?.data) {
+                validationErrors.value = error.response.data.errors
+            }
         }).finally(() => {
             processing.value = false
         })
@@ -43,11 +46,12 @@ export default function useAuth() {
             })
     }
 
-    const loginUser = (response) => {
+    const loginUser = async (response) => {
         user.name = response.data.name
         user.email = response.data.email
         localStorage.setItem('loggedIn', JSON.stringify(true))
-        router.push({ name: 'post.index' })
+        await getAbilities()
+        await router.push({ name: 'post.index' })
     }
 
     const logout = async() => {
@@ -63,10 +67,30 @@ export default function useAuth() {
                     title: error.response.title,
                     text: error.response.statusText,
                 })
-            }).finally(()=> {
-                processing.value = false
+            }).finally(() => {
+            processing.value = false
         })
     }
 
-    return { loginForm, validationErrors, processing, submitForm, user, getUser, logout }
+    const getAbilities = async () => {
+        axios.get('/api/abilities')
+            .then(response => {
+                const permissions = response.data
+                const { can, rules } = new AbilityBuilder(Ability)
+
+                can(permissions)
+                ability.update(rules)
+            })
+    }
+
+    return {
+        loginForm,
+        validationErrors,
+        processing,
+        submitForm,
+        user,
+        getUser,
+        logout,
+        getAbilities,
+    }
 }

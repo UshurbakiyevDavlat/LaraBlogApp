@@ -111,11 +111,12 @@
                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ post.category }}</td>
                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{{ post.created_at }}</td>
                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                        <router-link :to="{name: 'post.edit', params: {id: post.id }}">
+                        <router-link v-if="can('post.update')" :to="{name: 'post.edit', params: {id: post.id }}">
                             Edit
                         </router-link>
 
-                        <a href="#" @click.prevent="deletePost(post.id)" class="ml-1">Delete</a>
+                        <a href="#" v-if="can('post.delete')" @click.prevent="deletePost(post.id)"
+                           class="ml-1">Delete</a>
                     </td>
                 </tr>
                 </tbody>
@@ -127,6 +128,8 @@
 </template>
 
 <script>
+
+import { useAbility } from '@casl/vue'
 import { onMounted, ref, watch } from 'vue';
 import useCategories from '../../composables/categories.js';
 import usePosts from "../../composables/posts";
@@ -143,6 +146,7 @@ export default {
         const orderDirection = ref('desc');
         const { posts, getPosts, deletePost } = usePosts();
         const { categories, getCategories } = useCategories();
+        const { can } = useAbility()
 
         const updateOrdering = (column) => {
             orderColumn.value = column;
@@ -232,6 +236,7 @@ export default {
             orderDirection,
             updateOrdering,
             deletePost,
+            can,
         };
     },
 }

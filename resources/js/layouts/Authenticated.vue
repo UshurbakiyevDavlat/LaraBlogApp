@@ -19,7 +19,7 @@
                             <router-link :to="{ name:'post.index' }" active-class="border-b-2 border-indigo-400" class="inline-flex items-center px-1 pt-1 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out">
                                 Posts
                             </router-link>
-                            <router-link :to="{name: 'post.create'}" active-class="border-b-2 border-indigo-400" class="inline-flex items-center px-1 pt-1 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out">
+                            <router-link v-if="can('post.create')" :to="{name: 'post.create'}" active-class="border-b-2 border-indigo-400" class="inline-flex items-center px-1 pt-1 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out">
                                 Create Post
                             </router-link>
                         </div>
@@ -62,16 +62,19 @@
 </template>
 
 <script>
+import { useAbility } from '@casl/vue';
 import useAuth from '../composables/auth.js';
 
 export default {
     setup() {
         const { user, logout, processing } = useAuth();
+        const { can } = useAbility()
 
         return {
             user,
             logout,
             processing,
+            can
         }
     },
     computed: {
