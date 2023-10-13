@@ -1,4 +1,4 @@
-import { ref, reactive, inject } from 'vue';
+import { inject, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const user = reactive({
@@ -56,7 +56,7 @@ export default function useAuth() {
         processing.value = true
 
         axios.post('/logout')
-            .then(router.push({ name: 'login' }))
+            .then(response => router.push({ name: 'login' }))
             .catch(error => {
                 swal({
                     icon: 'error',

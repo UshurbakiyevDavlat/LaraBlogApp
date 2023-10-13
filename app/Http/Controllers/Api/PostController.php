@@ -8,6 +8,7 @@ use App\Http\Requests\Post\StoreRequest;
 use App\Http\Requests\Post\UpdateRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
@@ -47,8 +48,13 @@ class PostController extends Controller
         return PostResource::collection($post);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function store(StoreRequest $request): PostResource
     {
+        $this->authorize('post.create'); // gate check
+
         $data = $request->validated();
 
         if ($data['thumbnail']) {
@@ -61,8 +67,13 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function update(Post $post, UpdateRequest $request): PostResource
     {
+        $this->authorize('post.update'); // gate check
+
         $data = $request->validated();
 
         $post->update($data);
@@ -75,8 +86,13 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function destroy(Post $post): Response
     {
+        $this->authorize('post.delete'); // gate check
+
         $post->delete();
 
         return response()->noContent();
