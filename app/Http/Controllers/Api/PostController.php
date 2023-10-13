@@ -48,13 +48,8 @@ class PostController extends Controller
         return PostResource::collection($post);
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function store(StoreRequest $request): PostResource
     {
-        $this->authorize('post.create'); // gate check
-
         $data = $request->validated();
 
         if ($data['thumbnail']) {
@@ -67,13 +62,8 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function update(Post $post, UpdateRequest $request): PostResource
     {
-        $this->authorize('post.update'); // gate check
-
         $data = $request->validated();
 
         $post->update($data);
